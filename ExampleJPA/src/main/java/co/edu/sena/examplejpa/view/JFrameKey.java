@@ -4,11 +4,10 @@
  */
 package co.edu.sena.examplejpa.view;
 
-import co.edu.sena.examplejdbc.bd.DBKey;
-import co.edu.sena.examplejpa.utils.MessageUtils;
+import co.edu.sena.examplejpa.controller.IKeyRoomController;
+import co.edu.sena.examplejpa.controller.KeyRoomController;
 import co.edu.sena.examplejpa.model.KeyRoom;
-import co.edu.sena.examplejdbc.controllers.KeyController;
-
+import co.edu.sena.examplejpa.utils.MessageUtils;
 import java.util.List;
 import javax.swing.JOptionPane;
 import javax.swing.table.DefaultTableModel;
@@ -19,7 +18,7 @@ import javax.swing.table.DefaultTableModel;
  */
 public class JFrameKey extends javax.swing.JFrame {
 
-    private IKeyRoomController keyController = new KeyController();
+    private IKeyRoomController keyController = new KeyRoomController();
 
     /**
      * Creates new form JFrameKey
@@ -275,24 +274,26 @@ public class JFrameKey extends javax.swing.JFrame {
     }// </editor-fold>//GEN-END:initComponents
 
     private void jButtonInsertActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_jButtonInsertActionPerformed
-        DBKey dbkey = new DBKey();
-        Key key = new Key();
-        key.setId(Integer.parseInt(jTextFieldid.getText()));
-        key.setName(jTextFieldName.getText());
-        key.setRoom(jTextFieldRoom.getText());
-        key.setCount(Integer.parseInt(jTextFieldCount.getText()));
-        key.setObservation(jTextFieldObservation.getText());
-        dbkey.insert(key);
-        MessageUtils.ShowInfoMessage("Key ingresada exitosamente");
-
-
+        try {
+            KeyRoom key = new KeyRoom();
+            key.setName(jTextFieldName.getText().toUpperCase());
+            key.setRoom(jTextFieldRoom.getText());
+            key.setCount(Integer.parseInt(jTextFieldCount.getText()));
+            key.setObservation(jTextFieldObservation.getText());
+            keyController.insert(key);
+            MessageUtils.ShowInfoMessage("Llave creada exitosamente");
+            FillTable();
+            clean();
+        } catch (Exception e) {
+            MessageUtils.ShowErrorMessage(e.getMessage());
+        }
     }//GEN-LAST:event_jButtonInsertActionPerformed
 
     private void jButtonUpdateActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_jButtonUpdateActionPerformed
         try {
-            Key key = new Key();
+            KeyRoom key = new KeyRoom();
             key.setId(Integer.parseInt(jTextFieldid.getText()));
-            key.setName(jTextFieldName.getText());
+            key.setName(jTextFieldName.getText().toUpperCase());
             key.setRoom(jTextFieldRoom.getText());
             key.setCount(Integer.parseInt(jTextFieldCount.getText()));
             key.setObservation(jTextFieldObservation.getText());
@@ -313,14 +314,14 @@ public class JFrameKey extends javax.swing.JFrame {
     private void jTableKeyMouseClicked(java.awt.event.MouseEvent evt) {//GEN-FIRST:event_jTableKeyMouseClicked
         int rowSelected = jTableKey.getSelectedRow();
         if (rowSelected != -1) {
-            int idSelected = Integer.parseInt(jTableKey.getValueAt(rowSelected, 0).toString());
             try {
-                Key key = keyController.findById(idSelected);
-                jTextFieldid.setText(String.valueOf(idSelected));
-                jTextFieldName.setText(key.getName());
-                jTextFieldRoom.setText(key.getRoom());
-                jTextFieldCount.setText(String.valueOf(idSelected));
-                jTextFieldObservation.setText(key.getObservation());
+                jTextFieldid.setText(jTableKey.getValueAt(rowSelected, 0).toString());
+                jTextFieldName.setText(jTableKey.getValueAt(rowSelected, 1).toString());
+                jTextFieldRoom.setText(jTableKey.getValueAt(rowSelected, 2).toString());
+
+                KeyRoom myKey = keyController.findById(Integer.parseInt(jTextFieldid.getText()));
+                jTextFieldCount.setText(String.valueOf(myKey.getCount()));
+                jTextFieldObservation.setText(myKey.getObservation());
 
                 jButtonInsert.setEnabled(false);
                 jButtonDelete.setEnabled(true);
@@ -346,8 +347,8 @@ public class JFrameKey extends javax.swing.JFrame {
     }//GEN-LAST:event_jButtonDeleteActionPerformed
 
     private void jLabelIconMouseClicked(java.awt.event.MouseEvent evt) {//GEN-FIRST:event_jLabelIconMouseClicked
-       JFrameHome view =new JFrameHome();
-       view.setVisible(true);
+        JFrameHome view = new JFrameHome();
+        view.setVisible(true);
         setVisible(false);
     }//GEN-LAST:event_jLabelIconMouseClicked
     public void clean() {

@@ -5,9 +5,9 @@
 package co.edu.sena.examplejpa.view;
 
 
-import co.edu.sena.examplejpa.controller.IEmployeeController;
 import co.edu.sena.examplejpa.controller.EmployeeController;
 import co.edu.sena.examplejpa.controller.EmployeeTypeController;
+import co.edu.sena.examplejpa.controller.IEmployeeController;
 import co.edu.sena.examplejpa.controller.IEmployeeTypeController;
 import co.edu.sena.examplejpa.model.Employee;
 import co.edu.sena.examplejpa.model.EmployeeType;
@@ -15,7 +15,6 @@ import co.edu.sena.examplejpa.utils.MessageUtils;
 import java.util.List;
 import javax.swing.DefaultComboBoxModel;
 import javax.swing.table.DefaultTableModel;
-import java.awt.Color;
 import javax.swing.JOptionPane;
 
 /**
